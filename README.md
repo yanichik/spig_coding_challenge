@@ -14,7 +14,7 @@ https://sfof9o2xn8.execute-api.us-east-1.amazonaws.com/prod
 We provide a very barebones application to get started. This application is a default Rails 7 application with only one controller, `BooksController` that retrieves information from the endpoint specified above. Feel free to change the data fetching logic any way necessary to complete this assignment. This application was generated with Tailwind support, as well as SQLite, so there is no need to have an RDBM server like postgresql running, however most free hosting providers will require you to use PostgreSQL or MySQL, so keep that in mind if trying to deploy your version for us to grade.
 
 ### System dependencies
-- Ruby 3.0.2
+- Ruby 3.0.4
 - Rails 7
 - SQLite3
 
