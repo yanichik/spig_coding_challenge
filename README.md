@@ -2,7 +2,7 @@
 
 ## Rails Version
 
-We have created a very simple REST API that returns a JSON object of famous books. We would like you you to build a Rails application to consume the API and display the data in a pleasant and organized manner. You should consider importing the data into `ActiveRecord` models, adding ways to filter the data, limit the number of results, sort the list of books, or any other common data-consumption conveniences.
+We have created a very simple REST API that returns a JSON object of famous books. We would like you you to build a Rails application to consume the API and display the data in a pleasant and organized manner. You should consider importing the data into `ActiveRecord` models, adding ways to filter the data, limit or paginate the number of results, sort the list of books, search, or any other common data-consumption conveniences.
 
 Creativity is welcome; there are no rules or limitations on how you perform this other than that it serves up the data from the API. Any kind of augmentation of the data from outside sources or useful extensions will be considered when analysing your submission. More importantly, have fun with this project and show us what you can bring to the team.
 
