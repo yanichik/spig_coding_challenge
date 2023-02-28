@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import "./App.css";
 import Card from "./UI/Card";
+import SearchFilter from "./UI/SearchFilter";
 
 function App() {
 	const [books, setBooks] = useState([]);
@@ -75,7 +76,7 @@ function App() {
 	return (
 		<div className="App">
 			<h1>ServicePros Coding Challenge</h1>
-			<form onSubmit={handleYrRange}>
+			{/* <form onSubmit={handleYrRange}>
 				<label>
 					Start Year:
 					<input type="text" name="yearStart" placeholder="" />
@@ -85,28 +86,29 @@ function App() {
 					<input type="text" name="yearEnd" placeholder="" />
 				</label>
 				<button type="submit">Filter by Year Range</button>
-			</form>
-			<form onSubmit={handleTitleSearch}>
+			</form> */}
+			{/* <form onSubmit={handleTitleSearch}>
 				<label>
 					Title
 					<input type="text" name="title" placeholder="" />
 				</label>
 				<button type="submit">Filter by Title</button>
-			</form>
-			<form onSubmit={handleAuthorSearch}>
+			</form> */}
+			<SearchFilter handleTitleSearch={handleTitleSearch} />
+			{/* <form onSubmit={handleAuthorSearch}>
 				<label>
 					Author
 					<input type="text" name="author" placeholder="" />
 				</label>
 				<button type="submit">Filter by Author</button>
-			</form>
-			<form onSubmit={handleIsbnSearch}>
+			</form> */}
+			{/* <form onSubmit={handleIsbnSearch}>
 				<label>
 					ISBN
 					<input type="text" name="isbn" placeholder="" />
 				</label>
 				<button type="submit">Filter by ISBN</button>
-			</form>
+			</form> */}
 			<ul>
 				{filteredBooks.length > 0 ? (
 					filteredBooks.map((book) => (
