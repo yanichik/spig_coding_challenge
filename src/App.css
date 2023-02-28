@@ -5,12 +5,20 @@
 	text-align: center;
 }
 
-.card {
-	padding: 2em;
-	margin-bottom: 5px;
-	list-style-type: none;
-}
-
 code {
 	background-color: #111;
+}
+
+.search-filter {
+	padding: 25px;
+}
+
+.no-books {
+	padding-top: 15px;
+	margin: auto;
+}
+
+.card-item {
+	text-align: start;
+	margin-left: 5px;
 }

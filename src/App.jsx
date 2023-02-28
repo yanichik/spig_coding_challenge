@@ -1,55 +1,77 @@
 import { useRef, useEffect, useState } from "react";
+import { Grid, Stack, Card } from "@mui/material";
 import "./App.css";
-import Card from "./UI/Card";
-import SearchFilter from "./UI/SearchFilter";
+import SearchFilter from "./Components/SearchFilter";
 
 function App() {
 	const [books, setBooks] = useState([]);
 	const [filteredBooks, setFilteredBooks] = useState([]);
-	const [isFiltered, setIsFiltered] = useState(false);
-	const handleYrRange = (e) => {
+
+	/*  
+  Filters books according to 4 parameters (all optional): year range, title, author, and/or isbn.
+  */
+	const handleFilter = (e) => {
 		e.preventDefault();
 		const yearStart = parseInt(e.target[0].value);
-		const yearEnd = parseInt(e.target[1].value);
-		console.log(yearStart, yearEnd);
-		const filtered = books.filter(
-			(book) => book.year >= yearStart && book.year <= yearEnd
-		);
-		setFilteredBooks(() => filtered);
-		// SOLVE: books complete list only at initial fetch. if multiple filters applied, will not reflect accurate filter
-	};
-	const handleTitleSearch = (e) => {
-		e.preventDefault();
-		const titleSearched = e.target[0].value;
-		const filtered = books.filter(
-			(book) =>
-				book.title &&
-				book.title.toLowerCase().includes(titleSearched.toLowerCase())
-		);
-		setFilteredBooks(() => filtered);
-	};
-	const handleAuthorSearch = (e) => {
-		e.preventDefault();
-		const authorSearched = e.target[0].value;
-		const filtered = books.filter(
-			(book) =>
-				book.author &&
-				book.author.toLowerCase().includes(authorSearched.toLowerCase())
-		);
+		const yearEnd = parseInt(e.target[2].value);
+		const titleSearched = e.target[4].value;
+		const authorSearched = e.target[6].value;
+		const isbnSearched = e.target[8].value;
+
+		/* Filter chain: by year range, title, author, and isbn. */
+		const filtered = books
+			.filter(filterByYear(yearStart, yearEnd))
+			.filter(
+				(book) =>
+					book.title &&
+					book.title.toLowerCase().includes(titleSearched.toLowerCase())
+			)
+			.filter(
+				(book) =>
+					book.author &&
+					book.author.toLowerCase().includes(authorSearched.toLowerCase())
+			)
+			.filter(filterByIsbn(isbnSearched));
 		setFilteredBooks(() => filtered);
 	};
-	const handleIsbnSearch = (e) => {
-		e.preventDefault();
-		const isbnSearched = e.target[0].value;
-		console.log(typeof books[0].isbn);
-		const filtered = books.filter(
-			(book) => book.isbn && book.isbn.toString().includes(isbnSearched)
-		);
-		setFilteredBooks(() => filtered);
+
+	/* Callback function to filter by ISBN.
+     If ISBN entered, filter by ISBN. Otherwise return all.
+  */
+	const filterByIsbn = (isbnSearched) => {
+		return (book) => {
+			if (isbnSearched) {
+				return book.isbn.toString().includes(isbnSearched);
+			}
+			return true;
+		};
 	};
+
+	/* Callback function to filter by year range.
+     If yearStart and yearEnd blank, returns full array of books.
+     If yearStart and not yearEnd, returns books authored including and after yearStart
+     If yearEnd and not yearStart, returns books authored including and before yearEnd
+  */
+	const filterByYear = (yearStart, yearEnd) => {
+		return (book) => {
+			if (yearStart && yearEnd) {
+				return book.year >= yearStart && book.year <= yearEnd;
+			}
+			if (yearStart && !yearEnd) {
+				return book.year >= yearStart;
+			}
+			if (yearEnd && !yearStart) {
+				return book.year <= yearEnd;
+			}
+			return true;
+		};
+	};
+	/*
+  Fetches books data from API and sets books state with data transformations.
+  Fetch occurs only on initial load.
+	 */
 	useEffect(() => {
 		const url = "/books";
-
 		const fetchData = async () => {
 			try {
 				const response = await fetch(url);
@@ -69,62 +91,33 @@ function App() {
 				console.log("error", error);
 			}
 		};
-
 		fetchData();
 	}, []);
 
 	return (
 		<div className="App">
 			<h1>ServicePros Coding Challenge</h1>
-			{/* <form onSubmit={handleYrRange}>
-				<label>
-					Start Year:
-					<input type="text" name="yearStart" placeholder="" />
-				</label>
-				<label>
-					Start End:
-					<input type="text" name="yearEnd" placeholder="" />
-				</label>
-				<button type="submit">Filter by Year Range</button>
-			</form> */}
-			{/* <form onSubmit={handleTitleSearch}>
-				<label>
-					Title
-					<input type="text" name="title" placeholder="" />
-				</label>
-				<button type="submit">Filter by Title</button>
-			</form> */}
-			<SearchFilter handleTitleSearch={handleTitleSearch} />
-			{/* <form onSubmit={handleAuthorSearch}>
-				<label>
-					Author
-					<input type="text" name="author" placeholder="" />
-				</label>
-				<button type="submit">Filter by Author</button>
-			</form> */}
-			{/* <form onSubmit={handleIsbnSearch}>
-				<label>
-					ISBN
-					<input type="text" name="isbn" placeholder="" />
-				</label>
-				<button type="submit">Filter by ISBN</button>
-			</form> */}
-			<ul>
+			<SearchFilter onFilter={handleFilter} />
+			<Grid
+				container
+				spacing={{ xs: 2, md: 3 }}
+				columns={{ xs: 2, sm: 8, md: 12, lg: 16 }}
+			>
 				{filteredBooks.length > 0 ? (
 					filteredBooks.map((book) => (
-						<Card key={Math.random()}>
-							<li>
-								<div>Title: {book.title}</div>
-								<div>Author: {book.author}</div>
-								<div>Year: {book.year}</div>
-								<div>ISBN: {book.isbn}</div>
-							</li>
-						</Card>
+						<Grid item xs={2} sm={4} md={4} key={Math.random()}>
+							<Card variant="outlined">
+								<div className="card-item">Title: {book.title}</div>
+								<div className="card-item">Author: {book.author}</div>
+								<div className="card-item">Year: {book.year}</div>
+								<div className="card-item">ISBN: {book.isbn}</div>
+							</Card>
+						</Grid>
 					))
 				) : (
-					<p>No Books Filtered</p>
+					<p className="no-books">No Books Match</p>
 				)}
-			</ul>
+			</Grid>
 		</div>
 	);
 }
